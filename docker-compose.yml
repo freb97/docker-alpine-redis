@@ -1,0 +1,34 @@
+version: '3'
+
+## ***********************************************************************
+##  SERVICES CONFIGURATION
+## ***********************************************************************
+services:
+  redis:
+    container_name: redis
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "22:22"     # ssh
+      - "6379:6379" # redis
+    command: [ "redis-server", "/etc/redis.conf" ]
+    volumes:
+      - "./config/redis.conf:/etc/redis.conf"
+      - "./dumps:/var/lib/redis"
+    networks:
+      - web
+
+## ***********************************************************************
+##  PERSISTENT DOCKER VOLUMES
+## ***********************************************************************
+volumes:
+  alpine_redis_cache:
+    driver: local
+
+## ***********************************************************************
+##  NETWORKS
+## ***********************************************************************
+networks:
+  web:
+    external: false
